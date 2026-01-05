@@ -33,3 +33,12 @@ Thumbs.db
 .env
 .env.local
 
+# Frontend
+frontend/node_modules/
+frontend/build/
+frontend/.pnp
+frontend/.pnp.js
+frontend/coverage/
+frontend/*.log
+frontend/.DS_Store
+

@@ -4,6 +4,7 @@ import VideoList from './components/VideoList';
 import VideoForm from './components/VideoForm';
 import VideoTranscript from './components/VideoTranscript';
 import Header from './components/Header';
+import { videoService } from './services/api';
 
 function App() {
   const [videos, setVideos] = useState([]);
@@ -19,8 +20,7 @@ function App() {
   const loadVideos = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://127.0.0.1:5000/api/videos');
-      const data = await response.json();
+      const data = await videoService.getVideos();
       if (data.success) {
         setVideos(data.videos || []);
       } else {
@@ -40,15 +40,7 @@ function App() {
       setError(null);
       setMessage(null);
       
-      const response = await fetch('http://127.0.0.1:5000/api/videos', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ video_url: videoUrl }),
-      });
-
-      const data = await response.json();
+      const data = await videoService.addVideo(videoUrl);
       
       if (data.success) {
         if (data.exists) {
@@ -65,7 +57,7 @@ function App() {
         setError(data.error || 'Failed to add video');
       }
     } catch (err) {
-      setError('Failed to connect to server. Make sure the API server is running.');
+      setError(err.response?.data?.error || 'Failed to connect to server. Make sure the API server is running.');
       console.error('Error adding video:', err);
     } finally {
       setLoading(false);
@@ -77,8 +69,7 @@ function App() {
       setLoading(true);
       setError(null);
       
-      const response = await fetch(`http://127.0.0.1:5000/api/videos/${videoId}`);
-      const data = await response.json();
+      const data = await videoService.getVideo(videoId);
       
       if (data.success) {
         setSelectedVideo(data.video);
@@ -86,7 +77,7 @@ function App() {
         setError(data.error || 'Failed to load transcript');
       }
     } catch (err) {
-      setError('Failed to connect to server.');
+      setError(err.response?.data?.error || 'Failed to connect to server.');
       console.error('Error loading video:', err);
     } finally {
       setLoading(false);
