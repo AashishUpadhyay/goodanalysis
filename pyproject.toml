@@ -1,0 +1,24 @@
+[project]
+name = "goodanalysis"
+version = "0.1.0"
+description = "YouTube Transcript RAG System - Download transcripts, store in vector DB, and perform RAG queries"
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = [
+    "youtube-transcript-api>=0.6.1",
+    "chromadb>=0.4.22",
+    "sentence-transformers>=2.2.2",
+    "torch>=2.0.0,<2.8.0; sys_platform != 'darwin' or platform_machine != 'x86_64'",
+    "torch==2.2.2; sys_platform == 'darwin' and platform_machine == 'x86_64'",
+    "numpy<2.0.0",
+    "openai>=1.0.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project.scripts]
+goodanalysis = "goodanalysis.main:main"
+
+
