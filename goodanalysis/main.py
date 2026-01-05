@@ -156,6 +156,16 @@ Examples:
     web_parser.add_argument('--debug', action='store_true',
                             help='Enable debug mode')
 
+    # API server command
+    api_parser = subparsers.add_parser(
+        'api', help='Start API server for React frontend')
+    api_parser.add_argument('--host', default='127.0.0.1',
+                            help='Host to bind to (default: 127.0.0.1)')
+    api_parser.add_argument('--port', type=int, default=5000,
+                            help='Port to bind to (default: 5000)')
+    api_parser.add_argument('--debug', action='store_true',
+                            help='Enable debug mode')
+
     args = parser.parse_args()
 
     if not args.command:
@@ -187,6 +197,15 @@ Examples:
         # Web UI doesn't need vector store initialization here
         # It will initialize it when needed
         run_web_ui(
+            host=getattr(args, 'host', '127.0.0.1'),
+            port=getattr(args, 'port', 5000),
+            debug=getattr(args, 'debug', False)
+        )
+    elif args.command == 'api':
+        # API server doesn't need vector store initialization here
+        # It will initialize it when needed
+        from goodanalysis.api_server import run_api_server
+        run_api_server(
             host=getattr(args, 'host', '127.0.0.1'),
             port=getattr(args, 'port', 5000),
             debug=getattr(args, 'debug', False)
