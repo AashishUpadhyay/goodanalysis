@@ -2,7 +2,7 @@
 name = "goodanalysis"
 version = "0.1.0"
 description = "YouTube Transcript RAG System - Download transcripts, store in vector DB, and perform RAG queries"
-readme = "README.md"
+readme = "readme.md"
 requires-python = ">=3.8"
 dependencies = [
     "youtube-transcript-api>=0.6.1",

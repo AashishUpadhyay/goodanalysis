@@ -70,3 +70,4 @@ function VideoTranscript({ video, onBack, loading }) {
 
 export default VideoTranscript;
 
+

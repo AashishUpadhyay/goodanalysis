@@ -42,3 +42,7 @@ frontend/coverage/
 frontend/*.log
 frontend/.DS_Store
 
+# Docker volumes and temp files
+.tmp/
+*.tmp
+
