@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+
+{% block title %}Videos - YouTube Transcript Viewer{% endblock %}
+
+{% block content %}
+    <div class="video-form">
+        <h3>➕ Add New Video</h3>
+        <form method="POST" action="/" id="video-form" enctype="application/x-www-form-urlencoded">
+            <div class="form-group">
+                <input 
+                    type="text" 
+                    name="video_url" 
+                    class="form-input" 
+                    placeholder="Enter YouTube URL or Video ID (e.g., https://www.youtube.com/watch?v=VIDEO_ID)"
+                    required
+                    id="video-url-input"
+                >
+                <button type="submit" class="form-submit" id="submit-btn">Download Transcript</button>
+            </div>
+            <div class="form-help">
+                Supports: youtube.com/watch?v=..., youtu.be/..., or just the video ID
+            </div>
+        </form>
+    </div>
+    
+    <h2>Downloaded Videos</h2>
+    
+    {% if videos %}
+        <div class="video-grid">
+            {% for video in videos %}
+                <a href="/video/{{ video.id }}" class="video-card">
+                    <img src="{{ video.thumbnail }}" alt="Video thumbnail" class="video-thumbnail" 
+                         onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'320\' height=\'180\'%3E%3Crect fill=\'%23ddd\' width=\'320\' height=\'180\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' text-anchor=\'middle\' dy=\'.3em\' fill=\'%23999\' font-family=\'Arial\' font-size=\'14\'%3ENo Thumbnail%3C/text%3E%3C/svg%3E';">
+                    <div class="video-info">
+                        <div class="video-id">{{ video.id }}</div>
+                        <div class="video-link">{{ video.url }}</div>
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <h2>No videos found</h2>
+            <p>You haven't downloaded any video transcripts yet.</p>
+            <p style="margin-top: 20px;">
+                Use the form above to add your first video!
+            </p>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Add loading state to form submission
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('video-form');
+        const submitBtn = document.getElementById('submit-btn');
+        const input = document.getElementById('video-url-input');
+        
+        if (!form) {
+            console.error('Form not found!');
+            return;
+        }
+        
+        form.addEventListener('submit', function(e) {
+            const videoUrl = input.value.trim();
+            
+            // Comprehensive client-side logging
+            console.log('='.repeat(60));
+            console.log('FORM SUBMISSION EVENT');
+            console.log('='.repeat(60));
+            console.log('Form method:', form.method);
+            console.log('Form action:', form.action);
+            console.log('Form enctype:', form.enctype);
+            console.log('Input name:', input.name);
+            console.log('Input value (raw):', input.value);
+            console.log('Input value (trimmed):', videoUrl);
+            console.log('Input value length:', videoUrl.length);
+            
+            // Check all form data
+            const formData = new FormData(form);
+            console.log('FormData entries:');
+            for (let [key, value] of formData.entries()) {
+                console.log(`  ${key}: "${value}"`);
+            }
+            
+            // Validate input
+            if (!videoUrl) {
+                console.error('✗ Empty video URL detected!');
+                e.preventDefault();
+                alert('Please enter a YouTube video URL or video ID');
+                return false;
+            }
+            
+            console.log('✓ Video URL is valid, submitting form');
+            console.log('='.repeat(60));
+            
+            // IMPORTANT: Don't disable the input field before submission!
+            // Disabled form fields are NOT included in form submissions.
+            // Update UI after form submission starts
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Processing...';
+            // Don't disable input - it prevents data from being sent!
+            // Just make it visually appear disabled with CSS
+            input.style.opacity = '0.6';
+            input.style.cursor = 'not-allowed';
+            
+            // Let the form submit naturally - don't prevent default
+            // The form will POST to the server with the data
+        });
+    });
+</script>
+{% endblock %}
+

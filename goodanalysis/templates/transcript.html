@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Transcript - {{ video.id }}{% endblock %}
+
+{% block content %}
+    <div class="video-preview">
+        <img src="{{ video.thumbnail }}" alt="Video thumbnail" class="video-preview-thumbnail"
+             onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'200\' height=\'112\'%3E%3Crect fill=\'%23ddd\' width=\'200\' height=\'112\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' text-anchor=\'middle\' dy=\'.3em\' fill=\'%23999\' font-family=\'Arial\' font-size=\'12\'%3ENo Thumbnail%3C/text%3E%3C/svg%3E';">
+        <div class="video-preview-info">
+            <h2>Video: {{ video.id }}</h2>
+            <p style="margin-bottom: 15px;">
+                <a href="{{ video.url }}" target="_blank" class="video-link">{{ video.url }}</a>
+            </p>
+            <a href="{{ video.url }}" target="_blank" class="btn">Watch on YouTube</a>
+        </div>
+    </div>
+    
+    <div class="transcript-container">
+        <div class="transcript-header">
+            <h2>📄 Transcript</h2>
+            <div class="transcript-meta">
+                {{ video.char_count }} characters
+            </div>
+        </div>
+        <div class="transcript-content">{{ video.transcript }}</div>
+    </div>
+    
+    <div style="margin-top: 20px; text-align: center;">
+        <a href="/" class="btn btn-secondary">← Back to Videos</a>
+    </div>
+{% endblock %}
+

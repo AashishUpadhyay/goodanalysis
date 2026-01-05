@@ -1,5 +1,0 @@
-- I need an application that downloads the youtube transcript using https://pypi.org/project/youtube-transcript-api/
-- The transcript will be stored in a Vector DB
-- Then we will do RAG on the data.
-
-I need you to come up with an execution plan that's doable. We need a working prototype that can be build in the shortest amount of time.

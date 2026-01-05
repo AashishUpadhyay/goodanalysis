@@ -8,6 +8,7 @@ from typing import Optional
 from goodanalysis.transcript_downloader import download_transcript, format_transcript, get_video_id_from_url
 from goodanalysis.vector_store import VectorStore
 from goodanalysis.rag_system import RAGSystem
+from goodanalysis.web_ui import run_web_ui
 
 
 def add_video(vector_store: VectorStore, video_url_or_id: str):
@@ -112,6 +113,10 @@ Examples:
   # View a transcript
   python main.py view "VIDEO_ID"
   python main.py view "VIDEO_ID" --save transcript.txt
+  
+  # Start web UI
+  python main.py web
+  python main.py web --port 8080
         """
     )
 
@@ -141,6 +146,16 @@ Examples:
     view_parser.add_argument('video_id', help='YouTube video ID')
     view_parser.add_argument('--save', '-s', help='Save transcript to a file')
 
+    # Web UI command
+    web_parser = subparsers.add_parser(
+        'web', help='Start web UI to browse videos and transcripts')
+    web_parser.add_argument('--host', default='127.0.0.1',
+                            help='Host to bind to (default: 127.0.0.1)')
+    web_parser.add_argument('--port', type=int, default=5000,
+                            help='Port to bind to (default: 5000)')
+    web_parser.add_argument('--debug', action='store_true',
+                            help='Enable debug mode')
+
     args = parser.parse_args()
 
     if not args.command:
@@ -168,6 +183,14 @@ Examples:
             args.video_id)  # Support both URL and ID
         view_transcript(vector_store, video_id,
                         save_to_file=getattr(args, 'save', None))
+    elif args.command == 'web':
+        # Web UI doesn't need vector store initialization here
+        # It will initialize it when needed
+        run_web_ui(
+            host=getattr(args, 'host', '127.0.0.1'),
+            port=getattr(args, 'port', 5000),
+            debug=getattr(args, 'debug', False)
+        )
 
 
 if __name__ == "__main__":
